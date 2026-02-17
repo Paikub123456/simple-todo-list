@@ -12,9 +12,13 @@ const completedCount = document.getElementById('completedCount');
 let todos = [];
 
 // Fetch all todos
-async function fetchTodos() {
+async function fetchTodos(search = '') {
     try {
-        const response = await fetch(API_BASE);
+        const url = search
+            ? `${API_BASE}?search=${encodeURIComponent(search)}`
+            : API_BASE;
+
+        const response = await fetch(url);
         todos = await response.json();
         renderTodos();
     } catch (error) {
@@ -22,6 +26,7 @@ async function fetchTodos() {
         alert('Failed to load todos');
     }
 }
+
 
 // Add a new todo
 async function addTodo() {
@@ -141,6 +146,12 @@ todoInput.addEventListener('keypress', (e) => {
         addTodo();
     }
 });
+const searchInput = document.getElementById('searchInput');
+
+searchInput.addEventListener('input', (e) => {
+    fetchTodos(e.target.value);
+});
+
 
 // Initialize
 fetchTodos();

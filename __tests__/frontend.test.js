@@ -306,4 +306,30 @@ describe('Frontend Todo Application', () => {
       expect(escaped).not.toContain('<script>');
     });
   });
+  /**
+ * @jest-environment jsdom
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+describe('Frontend Search Feature', () => {
+  let document;
+  let window;
+
+  beforeEach(() => {
+    const html = fs.readFileSync(
+      path.resolve(__dirname, '../public/index.html'),
+      'utf8'
+    );
+
+    document = new DOMParser().parseFromString(html, 'text/html');
+    window = document.defaultView;
+  });
+
+  test('Search input should exist', () => {
+    const searchInput = document.getElementById('searchInput');
+    expect(searchInput).not.toBeNull();
+  });
+});
 });

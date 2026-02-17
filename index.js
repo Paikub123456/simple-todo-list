@@ -42,11 +42,21 @@ function writeTodos(todos) {
 
 // API Routes
 
-// Get all todos
+// Get all todos (with optional search)
 app.get('/api/todos', (req, res) => {
-  const todos = readTodos();
+  const { search } = req.query;
+  let todos = readTodos();
+
+  if (search) {
+    const keyword = search.toLowerCase();
+    todos = todos.filter(todo =>
+      todo.text.toLowerCase().includes(keyword)
+    );
+  }
+
   res.json(todos);
 });
+
 
 // Add a new todo
 app.post('/api/todos', (req, res) => {

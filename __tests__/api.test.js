@@ -228,6 +228,7 @@ describe('Todo API Endpoints', () => {
       const deleteResponse = await request(app).delete(`/api/todos/${todoId}`);
       expect(deleteResponse.status).toBe(200);
       
+      
       // Verify deletion
       const finalResponse = await request(app).get('/api/todos');
       expect(finalResponse.body).toHaveLength(0);
@@ -248,4 +249,23 @@ describe('Todo API Endpoints', () => {
       expect(response.body[2].text).toBe('Todo 3');
     });
   });
+  describe('GET /api/todos with search query', () => {
+  it('should return filtered todos when search query is provided', async () => {
+    // Add two todos first
+    await request(app)
+      .post('/api/todos')
+      .send({ text: 'Study DevOps' });
+
+    await request(app)
+      .post('/api/todos')
+      .send({ text: 'Buy Milk' });
+
+    const response = await request(app)
+      .get('/api/todos?search=study')
+      .expect(200);
+
+    expect(response.body.length).toBeGreaterThan(0);
+    expect(response.body[0].text.toLowerCase()).toContain('study');
+  });
+});
 });
